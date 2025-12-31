@@ -1,9 +1,18 @@
 package com.example.EmailSender.Model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class EmailBody {
 	private String filePath;
 	private String subject;
 	private String body;
+	private MultipartFile resume;
+	public MultipartFile getResume() {
+		return resume;
+	}
+	public void setResume(MultipartFile resume) {
+		this.resume = resume;
+	}
 	public String getFilePath() {
 		return filePath;
 	}
@@ -22,15 +31,16 @@ public class EmailBody {
 	public void setBody(String body) {
 		this.body = body;
 	}
-	public EmailBody(String filePath, String subject, String body) {
+	public EmailBody(String filePath, String subject, String body,MultipartFile resume) {
 		super();
 		this.filePath = filePath;
 		this.subject = subject;
 		this.body = body;
+		this.resume=resume;
 	}
 	@Override
 	public String toString() {
-		return "EmailBody [filePath=" + filePath + ", subject=" + subject + ", body=" + body + "]";
+		return "EmailBody [filePath=" + filePath + ", subject=" + subject + ", body=" + body +",resume="+resume+"]";
 	}
 	
 	

@@ -3,6 +3,7 @@ package com.example.EmailSender.ServiceImp;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +32,7 @@ public class EmailSenderServiceImp implements EmailSenderService {
 		javaMailSender.send(mail);
 	}
 
+	@Async("mailExecutor")
 	@Override
 	public void sendMailWithAttachment(String to, String Subject, String body, MultipartFile resume) {
 		try 
@@ -45,7 +47,10 @@ public class EmailSenderServiceImp implements EmailSenderService {
 				mail.addAttachment(resume.getOriginalFilename(), resume);
 			}
 		javaMailSender.send(message);
+		
+		 System.out.println("Sent to : " + to + " Thread : " + Thread.currentThread().getName());
 		}
+		
 		catch(Exception e)
 		{
 			throw new RuntimeException("Attachment is not Added");

@@ -1,11 +1,12 @@
 package com.example.EmailSender.ServiceImp;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.example.EmailSender.Service.EmailSenderService;
 
@@ -14,7 +15,8 @@ import jakarta.mail.internet.MimeMessage;
 @Service
 public class EmailSenderServiceImp implements EmailSenderService {
 	
-	
+	@Value("${resume.path}")
+	private String resumePath;
 	private final JavaMailSender javaMailSender;
 	
 	public EmailSenderServiceImp(JavaMailSender javaMailSender)
@@ -34,7 +36,7 @@ public class EmailSenderServiceImp implements EmailSenderService {
 
 	@Async("mailExecutor")
 	@Override
-	public void sendMailWithAttachment(String to, String Subject, String body, MultipartFile resume) {
+	public void sendMailWithAttachment(String to, String Subject, String body) {
 		try 
 		{
 		MimeMessage message =javaMailSender.createMimeMessage();
@@ -42,18 +44,16 @@ public class EmailSenderServiceImp implements EmailSenderService {
 		mail.setTo(to);
 		mail.setSubject(Subject);
 		mail.setText(body,false);
-		if(resume!=null && !resume.isEmpty())
-			{
-				mail.addAttachment(resume.getOriginalFilename(), resume);
-			}
-		javaMailSender.send(message);
-		
+		FileSystemResource resume =
+			    new FileSystemResource(resumePath);
+			mail.addAttachment("HariOmVermaLatestResume.pdf", resume);
+			javaMailSender.send(message);		
 		 System.out.println("Sent to : " + to + " Thread : " + Thread.currentThread().getName());
 		}
 		
-		catch(Exception e)
-		{
-			throw new RuntimeException("Attachment is not Added");
+		catch (Exception e) {
+		    System.err.println("Failed to send email to: " + to);
+		    e.printStackTrace();
 		}
 		
 	}

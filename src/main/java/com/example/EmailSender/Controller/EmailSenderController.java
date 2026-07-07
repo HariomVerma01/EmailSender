@@ -53,7 +53,7 @@ public class EmailSenderController {
 		}
 		for(String email:emails)
 		{
-			emailSenderService.sendMailWithAttachment(email, emailBody.getSubject(), emailBody.getBody(),emailBody.getResume());
+			emailSenderService.sendMailWithAttachment(email, emailBody.getSubject(), emailBody.getBody());
 		}
 		return "Mail Sent Successfully";
 	}

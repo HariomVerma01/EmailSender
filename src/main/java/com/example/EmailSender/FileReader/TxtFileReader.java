@@ -23,7 +23,13 @@ public class TxtFileReader implements EmailFileReader {
 			{
 				if(!line.trim().isEmpty())
 				{
-					mails.add(line.trim());
+					String email=line.trim();
+					// Remove leading '#' and other unwanted characters
+					email = email.replaceAll("^[#<>'\"\\s]+", "");
+
+					// Remove trailing '.', ',', ';', ':' and spaces
+					email = email.replaceAll("[.,;:\\s]+$", "");
+					mails.add(email);
 				}
 			}
 			
